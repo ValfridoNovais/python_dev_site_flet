@@ -82,4 +82,5 @@ def main(page: ft.Page):
 #ft.app(target=main, view=ft.WEB_BROWSER, host="0.0.0.0", port=8080)
 
 
-ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.102", port=8080)
+#ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.102", port=8080) #Casa
+ft.app(target=main, view=ft.WEB_BROWSER, host="10.14.56.243", port=8080) #Quartel
