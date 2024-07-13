@@ -17,12 +17,12 @@ import flet as ft
 # Diretório onde os arquivos serão armazenados
 UPLOAD_DIR = "uploads"
 
+# Cria o diretório de uploads se não existir
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
+
 def main(page: ft.Page):
     page.title = "MMPGzap"
-
-    # Cria o diretório de uploads se não existir
-    if not os.path.exists(UPLOAD_DIR):
-        os.makedirs(UPLOAD_DIR)
 
     titulo = ft.Text("MMPGzap")
 
@@ -59,13 +59,20 @@ def main(page: ft.Page):
     def enviar_arquivo(evento):
         if evento.files:
             for f in evento.files:
+                # Verifique se o arquivo foi carregado corretamente
+                if not f.path:
+                    chat.controls.append(ft.Text(f"Erro ao carregar o arquivo: {f.name}"))
+                    page.update()
+                    return
+                
                 # Salva o arquivo no diretório de uploads
                 file_path = os.path.join(UPLOAD_DIR, f.name)
                 with open(file_path, "wb") as file:
-                    file.write(f.read())
+                    with open(f.path, "rb") as source_file:
+                        file.write(source_file.read())
 
                 # Gera a URL do arquivo
-                file_url = f"/{UPLOAD_DIR}/{f.name}"
+                file_url = f"http://192.168.1.106:8000/{UPLOAD_DIR}/{f.name}"
 
                 texto = f"{campo_nome_usuario.value} enviou um arquivo: {f.name}"
                 chat.controls.append(ft.Text(texto))
@@ -113,13 +120,10 @@ def main(page: ft.Page):
     page.overlay.append(upload_picker)
     page.update()
 
-    # Adiciona uma rota para servir os arquivos de upload
-    @page.route(f"/{UPLOAD_DIR}/<path:filename>")
-    async def serve_files(request, filename):
-        return ft.FileResponse(path=os.path.join(UPLOAD_DIR, filename))
-# executar o seu sistema
-#ft.app(target=main, view=ft.WEB_BROWSER, host="localhost", port=8080)
+ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.106", port=8080)
+
+#ft.app(target=main, view=ft.WEB_BROWSER, server=FastAPIServer(app), host="0.0.0.0", port=8080)
 
 
-ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.106", port=8080) #Casa
+#ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.106", port=8080) #Casa
 #ft.app(target=main, view=ft.WEB_BROWSER, host="10.14.56.243", port=8080) #Quartel
