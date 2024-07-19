@@ -1,16 +1,3 @@
-# Titulo: MMPG_Novais
-# Botão: Iniciar Chat
-    # popup/modal/alerta
-        #Título: Bem Vindo ao MMPG_Zap
-        # Campo de Texto: Escreva seu nome no chat
-        # Botão: Entrar no chat
-            #Sumir com o Titulo e o Botão Inicial
-            #Fechar o poopup
-            #Criar Chat (com a mensagem: Usucari entrou)
-
-# Flet -> aplicativo/site/programa de computador
-
-#importar o flet
 import os
 import flet as ft
 
@@ -48,7 +35,7 @@ def main(page: ft.Page):
 
     linha_mensagem = ft.Row([texto_mensagem, botao_enviar])
     linha_upload = ft.Row([botao_upload_pdf, botao_upload_imagem, botao_upload_audio, botao_upload_video])
-    chat = ft.Column()
+    chat = ft.ListView(expand=True)  # Usando ListView para suportar rolagem
 
     def enviar_mensagem(evento):
         texto = f"{campo_nome_usuario.value}: {texto_mensagem.value}"
@@ -94,7 +81,7 @@ def main(page: ft.Page):
         page.remove(titulo)
         page.remove(botao_iniciar)
         janela.open = False
-        page.add(chat)
+        page.add(chat)  # Adiciona o chat com rolagem
         page.add(linha_mensagem)
         page.add(linha_upload)
         texto_entrou_chat = f"{campo_nome_usuario.value} entrou no chat"
@@ -120,10 +107,4 @@ def main(page: ft.Page):
     page.overlay.append(upload_picker)
     page.update()
 
-ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.106", port=8080)
-
-#ft.app(target=main, view=ft.WEB_BROWSER, server=FastAPIServer(app), host="0.0.0.0", port=8080)
-
-
-#ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.106", port=8080) #Casa
-#ft.app(target=main, view=ft.WEB_BROWSER, host="10.14.56.243", port=8080) #Quartel
+ft.app(target=main, view=ft.WEB_BROWSER, host="192.168.1.107", port=8080)
